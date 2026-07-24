@@ -102,4 +102,134 @@
   <h2>Playlist Ya Onse</h2>
   <p class="empty">Ikutsegula nyimbo...</p>
  </div>
-</div>
+</div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = "https://qctohxrluncojcsdfpvd.supabase.co";
+
+const SUPABASE_KEY = const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjdG9oeHJsdW5jb2pjc2RmcHZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjEyNzIsImV4cCI6MjEwMDQ5NzI3Mn0.lMDWHk9IP7cOnnD40cjaOwRYIv7BlCGcRO0e7mYKmFI";
+
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+async function uploadSong(){
+
+    let artist = document.getElementById("artist").value;
+    let songName = document.getElementById("songName").value;
+    let file = document.getElementById("fileInput").files[0];
+    let status = document.getElementById("status");
+
+
+    if(!artist || !songName || !file){
+        status.innerHTML = "Dzazani zonse";
+        return;
+    }
+
+
+    status.innerHTML = "Ikukweza nyimbo...";
+
+
+    let fileName = Date.now() + "-" + file.name;
+
+
+    const {error: uploadError} = await supabaseClient
+    .storage
+    .from("songs")
+    .upload(fileName,file);
+
+
+    if(uploadError){
+        status.innerHTML = uploadError.message;
+        return;
+    }
+
+
+    const {data:urlData} = supabaseClient
+    .storage
+    .from("songs")
+    .getPublicUrl(fileName);
+
+
+
+    const {error} = await supabaseClient
+    .from("songs")
+    .insert({
+        title:songName,
+        artist:artist,
+        file_url:urlData.publicUrl
+    });
+
+
+
+    if(error){
+        status.innerHTML = error.message;
+    }else{
+        status.innerHTML = "Nyimbo yakwezedwa bwino ✅";
+
+        document.getElementById("artist").value="";
+        document.getElementById("songName").value="";
+        document.getElementById("fileInput").value="";
+
+        loadSongs();
+    }
+
+}
+
+
+
+async function loadSongs(){
+
+    const {data,error}=await supabaseClient
+    .from("songs")
+    .select("*")
+    .order("id",{ascending:false});
+
+
+    if(error){
+        console.log(error);
+        return;
+    }
+
+
+    let playlist=document.getElementById("playlist");
+
+
+    playlist.innerHTML="<h2>Playlist Ya Onse</h2>";
+
+
+    data.forEach(song=>{
+
+
+        playlist.innerHTML += `
+
+        <div class="song">
+
+        <b>${song.artist}</b><br>
+
+        ${song.title}
+
+        <audio controls>
+        <source src="${song.file_url}">
+        </audio>
+
+        <a class="download" href="${song.file_url}">
+        Download
+        </a>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+loadSongs();
+
+</script>
