@@ -87,10 +87,9 @@
 <body>
 <div class="container">
  <h1>🎵 Music Share</h1>
- <p class="subtitle">Kwezani nyimbo zanu ndipo aliyense azimva</p>
-
+ <p class="subtitle Austin Jere</p>
  <div class="upload-box">
-  <h3>⬆ Kwezani Nyimbo Yanu</h3>
+  <h3>⬆ Upload Music</h3>
   <input type="text" id="artist" placeholder="Dzina Lako / Woyimba">
   <input type="text" id="songName" placeholder="Dzina la Nyimbo">
   <input type="file" id="fileInput" accept="audio/*">
@@ -99,8 +98,8 @@
  </div>
 
  <div id="playlist">
-  <h2>Playlist Ya Onse</h2>
-  <p class="empty">Ikutsegula nyimbo...</p>
+  <h2>Playlist </h2>
+  <p class="empty">...</p>
  </div>
 </div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -131,8 +130,7 @@ async function uploadSong(){
     }
 
 
-    status.innerHTML = "Ikukweza nyimbo...";
-
+    status.innerHTML = y
 
     let fileName = Date.now() + "-" + file.name;
 
