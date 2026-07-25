@@ -1,37 +1,101 @@
+Ok AUSTIN 👌 Spck Editor pa foni
+
+Nayi code yoyera ya Spck Editor. Kopi yonseyi
+
+\`\`html
 <!DOCTYPE html>
 <html lang="ny">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Music Share - AUSTIN</title>
+<title>Music Share</title>
 <style>
-*{ margin:0; padding:0; box-sizing:border-box; }
-body{ background:linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); color:white; font-family:Arial, sans-serif; padding:20px; min-height:100vh; }
-.container{ max-width:800px; margin:0 auto; }
-h1{ color:#00c853; text-align:center; margin-bottom:10px; font-size:2.5em; }
-.subtitle{ text-align:center; color:#aaa; margin-bottom:30px; }
-.upload-box{ background:#1a1a1a; padding:25px; border-radius:15px; margin-bottom:30px; border:2px solid #00c853; }
-.upload-box h3{ color:#00c853; margin-bottom:15px; }
-input{ width:100%; padding:12px; margin:8px 0; border-radius:8px; border:1px solid #333; background:#222; color:white; font-size:16px; }
-input::placeholder{ color:#777; }
-button{ background:#00c853; color:white; padding:14px; border:none; width:100%; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:10px; }
-button:hover{ background:#00e676; }
-button:disabled{ background:#555; cursor:not-allowed; }
-#status{ text-align:center; color:#00c853; margin-top:10px; font-weight:bold; }
-.song{ background:#1e1e1e; padding:20px; margin:15px 0; border-radius:12px; border-left:4px solid #00c853; }
-.song b{ font-size:18px; color:#00c853; }
-.song audio{ width:100%; margin:12px 0; }
-.download{ color:#00c853; text-decoration:none; font-weight:bold; display:inline-block; padding:8px 15px; background:#222; border-radius:6px; }
-.download:hover{ background:#333; }
-#playlist h2{ margin-bottom:15px; color:#00c853; }
-.empty{ text-align:center; color:#777; padding:40px; }
+body{background:#0a0a0a;color:white;font-family:Arial;padding:20px;margin:0}
+.container{max-width:700px;margin:0 auto}
+h1{color:#00c853;text-align:center}
+.upload-box{background:#1a1a1a;padding:20px;border-radius:12px;margin:20px 0;border:2px solid #00c853}
+input,button{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #333;background:#222;color:white;font-size:16px}
+button{background:#00c853;font-weight:bold;cursor:pointer}
+button:disabled{background:#555}
+.song{background:#1e1e1e;padding:15px;margin:10px 0;border-radius:10px;border-left:4px solid #00c853}
+#status{text-align:center;color:#00c853;margin-top:10px}
 </style>
 </head>
 <body>
 <div class="container">
 <h1>🎵 Music Share</h1>
-<p class="subtitle">Austin Jere</p>
+<p style="text-align:center;color:#aaa">By Austin Jere</p>
 <div class="upload-box">
-<h3>⬆ Upload Music</h3>
-<input type="text" id="artist" placeholder="Dzina Lako / Woyimba">
-<input type="text" id="songName" placeholder="Dzina la Nyi
+<h3>⬆ Kwezani Nyimbo</h3>
+<input type="text" id="artist" placeholder="Dzina la Woyimba">
+<input type="text" id="songName" placeholder="Dzina la Nyimbo">
+<input type="file" id="fileInput" accept="audio/_">
+<button id="uploadBtn">Kwezani Tsopano</button>
+<p id="status"></p>
+</div>
+<div id="playlist"><h2 style="color:#00c853">Playlist</h2></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://qctohxrluncojcsdfpvd.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjdG9oeHJsdW5jb2pjc2RmcHZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjEyNzIsImV4cCI6MjEwMDQ5NzI3Mn0.lMDWHk9IP7cOnnD40cjaOwRYIv7BlCGcRO0e7mYKmFI";
+const supabase = http://supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+http://document.getElementById("uploadBtn").addEventListener("click", uploadSong);
+
+async function uploadSong(){
+const artist = http://document.getElementById("artist").value;
+const songName = http://document.getElementById("songName").value;
+const file = http://document.getElementById("fileInput").files;
+const status = http://document.getElementById("status");
+const btn = http://document.getElementById("uploadBtn");[0]
+
+if(!artist ||!songName ||!file){ http://status.innerText = "⚠️ Dzazani zonse"; return; }
+
+http://btn.disabled = true;
+http://status.innerText = "⏳ Ikukweza...";
+
+try {
+const fileName = `${Date.now()}-${file.name}`;
+let { error: uploadError } = await http://supabase.storage.from('songs').upload(fileName, file);
+if(uploadError) throw uploadError;
+
+const { data } = http://supabase.storage.from('songs').getPublicUrl(fileName);
+
+let { error: dbError } = await http://supabase.from('songs').insert({ artist: artist, title: songName, file_url: http://data.publicUrl });
+if(dbError) throw dbError;
+
+http://status.innerText = "✅ Yakwezedwa bwino!";
+http://document.getElementById("artist").value="";
+http://document.getElementById("songName").value="";
+http://document.getElementById("fileInput").value="";
+loadSongs();
+} catch(err) {
+http://status.innerText = "❌ Vuto: " + http://err.message;
+}
+http://btn.disabled = false;
+}
+
+async function loadSongs(){
+const { data } = await http://supabase.from('songs').select('_').order('id', {ascending: false});
+let html = "<h2 style='color:#00c853'>Playlist</h2>";
+if(!data || http://data.length === 0){ html += "<p style='color:#777'>Palibe nyimbo pano</p>"; }
+http://data.forEach(s=>{
+html += `<div class="song"><b style="color:#00c853">${s.artist}</b><br>${s.title}<br><audio controls src="${s.file_url}"></audio><br><a href="${s.file_url}" target="_blank" style="color:#00c853">Download</a></div>`;
+});
+http://document.getElementById("playlist").innerHTML = html;
+}
+loadSongs();
+</script>
+</body>
+</html>
+\`\`
+
+### *MU SPK EDITOR CHITA IZI:*
+1. Pangani file yatsopano `index.html`
+2. Ikani code yonseyi
+3. Save > Run
+
+*KUMBukirani pa Supabase:* `songs` bucket = Public + ma Policies awiri
+
+Yesani tsopano AUSTIN
