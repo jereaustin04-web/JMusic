@@ -5,229 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Music Share - AUSTIN</title>
 <style>
- *{ margin:0; padding:0; box-sizing:border-box; }
- body{
-  background:linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-  color:white;
-  font-family:Arial, sans-serif;
-  padding:20px;
-  min-height:100vh;
- }
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{ background:linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); color:white; font-family:Arial, sans-serif; padding:20px; min-height:100vh; }
 .container{ max-width:800px; margin:0 auto; }
- h1{
-  color:#00c853;
-  text-align:center;
-  margin-bottom:10px;
-  font-size:2.5em;
- }
+h1{ color:#00c853; text-align:center; margin-bottom:10px; font-size:2.5em; }
 .subtitle{ text-align:center; color:#aaa; margin-bottom:30px; }
-
-.upload-box{
-  background:#1a1a1a;
-  padding:25px;
-  border-radius:15px;
-  margin-bottom:30px;
-  border:2px solid #00c853;
- }
+.upload-box{ background:#1a1a1a; padding:25px; border-radius:15px; margin-bottom:30px; border:2px solid #00c853; }
 .upload-box h3{ color:#00c853; margin-bottom:15px; }
-
- input{
-  width:100%;
-  padding:12px;
-  margin:8px 0;
-  border-radius:8px;
-  border:1px solid #333;
-  background:#222;
-  color:white;
-  font-size:16px;
- }
- input::placeholder{ color:#777; }
-
- button{
-  background:#00c853;
-  color:white;
-  padding:14px;
-  border:none;
-  width:100%;
-  border-radius:8px;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-  margin-top:10px;
- }
- button:hover{ background:#00e676; }
- button:disabled{ background:#555; cursor:not-allowed; }
-
- #status{ text-align:center; color:#00c853; margin-top:10px; font-weight:bold; }
-
-.song{
-  background:#1e1e1e;
-  padding:20px;
-  margin:15px 0;
-  border-radius:12px;
-  border-left:4px solid #00c853;
- }
+input{ width:100%; padding:12px; margin:8px 0; border-radius:8px; border:1px solid #333; background:#222; color:white; font-size:16px; }
+input::placeholder{ color:#777; }
+button{ background:#00c853; color:white; padding:14px; border:none; width:100%; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:10px; }
+button:hover{ background:#00e676; }
+button:disabled{ background:#555; cursor:not-allowed; }
+#status{ text-align:center; color:#00c853; margin-top:10px; font-weight:bold; }
+.song{ background:#1e1e1e; padding:20px; margin:15px 0; border-radius:12px; border-left:4px solid #00c853; }
 .song b{ font-size:18px; color:#00c853; }
 .song audio{ width:100%; margin:12px 0; }
-.download{
-  color:#00c853;
-  text-decoration:none;
-  font-weight:bold;
-  display:inline-block;
-  padding:8px 15px;
-  background:#222;
-  border-radius:6px;
- }
+.download{ color:#00c853; text-decoration:none; font-weight:bold; display:inline-block; padding:8px 15px; background:#222; border-radius:6px; }
 .download:hover{ background:#333; }
-
- #playlist h2{ margin-bottom:15px; color:#00c853; }
+#playlist h2{ margin-bottom:15px; color:#00c853; }
 .empty{ text-align:center; color:#777; padding:40px; }
 </style>
 </head>
 <body>
 <div class="container">
- <h1>🎵 Music Share</h1>
- <p class="subtitle Austin Jere</p>
- <div class="upload-box">
-  <h3>⬆ Upload Music</h3>
-  <input type="text" id="artist" placeholder="Dzina Lako / Woyimba">
-  <input type="text" id="songName" placeholder="Dzina la Nyimbo">
-  <input type="file" id="fileInput" accept="audio/*">
-  <button id="uploadBtn" onclick="uploadSong()">Kwezani Tsopano</button>
-  <p id="status"></p>
- </div>
-
- <div id="playlist">
-  <h2>Playlist </h2>
-  <p class="empty">...</p>
- </div>
-</div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const SUPABASE_URL = "https://qctohxrluncojcsdfpvd.supabase.co";
-
-const SUPABASE_KEY = const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjdG9oeHJsdW5jb2pjc2RmcHZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjEyNzIsImV4cCI6MjEwMDQ5NzI3Mn0.lMDWHk9IP7cOnnD40cjaOwRYIv7BlCGcRO0e7mYKmFI";
-
-
-const supabaseClient = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
-
-
-async function uploadSong(){
-
-    let artist = document.getElementById("artist").value;
-    let songName = document.getElementById("songName").value;
-    let file = document.getElementById("fileInput").files[0];
-    let status = document.getElementById("status");
-
-
-    if(!artist || !songName || !file){
-        status.innerHTML = "Dzazani zonse";
-        return;
-    }
-
-
-    status.innerHTML = y
-
-    let fileName = Date.now() + "-" + file.name;
-
-
-    const {error: uploadError} = await supabaseClient
-    .storage
-    .from("songs")
-    .upload(fileName,file);
-
-
-    if(uploadError){
-        status.innerHTML = uploadError.message;
-        return;
-    }
-
-
-    const {data:urlData} = supabaseClient
-    .storage
-    .from("songs")
-    .getPublicUrl(fileName);
-
-
-
-    const {error} = await supabaseClient
-    .from("songs")
-    .insert({
-        title:songName,
-        artist:artist,
-        file_url:urlData.publicUrl
-    });
-
-
-
-    if(error){
-        status.innerHTML = error.message;
-    }else{
-        status.innerHTML = "Nyimbo yakwezedwa bwino ✅";
-
-        document.getElementById("artist").value="";
-        document.getElementById("songName").value="";
-        document.getElementById("fileInput").value="";
-
-        loadSongs();
-    }
-
-}
-
-
-
-async function loadSongs(){
-
-    const {data,error}=await supabaseClient
-    .from("songs")
-    .select("*")
-    .order("id",{ascending:false});
-
-
-    if(error){
-        console.log(error);
-        return;
-    }
-
-
-    let playlist=document.getElementById("playlist");
-
-
-    playlist.innerHTML="<h2>Playlist Ya Onse</h2>";
-
-
-    data.forEach(song=>{
-
-
-        playlist.innerHTML += `
-
-        <div class="song">
-
-        <b>${song.artist}</b><br>
-
-        ${song.title}
-
-        <audio controls>
-        <source src="${song.file_url}">
-        </audio>
-
-        <a class="download" href="${song.file_url}">
-        Download
-        </a>
-
-        </div>
-
-        `;
-
-    });
-
-}
-
-
-loadSongs();
-
-</script>
+<h1>🎵 Music Share</h1>
+<p class="subtitle">Austin Jere</p>
+<div class="upload-box">
+<h3>⬆ Upload Music</h3>
+<input type="text" id="artist" placeholder="Dzina Lako / Woyimba">
+<input type="text" id="songName" placeholder="Dzina la Nyi
