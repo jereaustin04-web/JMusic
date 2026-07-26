@@ -3,20 +3,31 @@
 <style>
 body{background:#121212;color:white;font-family:Arial;margin:0;padding-bottom:120px}
 .header{background:green;padding:20px;text-align:center;font-size:24px;font-weight:bold}
-.song{background:#181818;margin:10px 15px;padding:15px;border-radius:8px;display:flex;justify-content:space-between;align-items:center}
+.upload-box{background:#181818;margin:15px;padding:20px;border-radius:10px;border:2px dashed green}
+.upload-box h3{text-align:center;margin-top:0}
+input{width:90%;padding:10px;margin:8px 0;border-radius:5px;border:none;background:#282828;color:white}
+.btn-upload{background:green;color:white;padding:12px;width:95%;border:none;border-radius:8px;font-size:16px;cursor:pointer;font-weight:bold}
+.btn-upload:hover{background:#1DB954}
+.song{background:#181818;margin:10px 15px;padding:15px;border-radius:8px;cursor:pointer}
 .song:hover{background:#282828}
-.btn-download{background:green;color:white;padding:8px 12px;border:none;border-radius:6px;cursor:pointer;font-size:14px}
-.btn-download:hover{background:#1DB954}
 .player{position:fixed;bottom:0;width:100%;background:#000;padding:15px;border-top:1px solid #282828}
 </style>
 </head><body>
 
 <div class="header">🎵 AUSTIN MUSIC</div>
 
-<h3 style="padding-left:15px">Nyimbo Zotsitsa:</h3>
+<div class="upload-box">
+<h3>Upload</h3>
+<input type="file" id="fileInput" accept="audio/*">
+<input type="text" id="songTitle" placeholder="Lembani mutu wa nyimbo">
+<input type="text" id="songArtist" placeholder="Lembani dzina la woyimba">
+<button class="btn-upload" onclick="uploadSong()">UPLOAD NYIMBO</button>
+<p id="status" style="text-align:center;color:yellow"></p>
+</div>
+
+<h3 style="padding-left:15px">Nyimbo Zonse:</h3>
 <div id="playlist">Zikutsegula...</div>
 
-<!-- PLAYER YOPANSI -->
 <div class="player">
 <h4 id="nowPlaying" style="margin:5px 0">Sankhani nyimbo</h4>
 <audio id="audioPlayer" controls style="width:100%"></audio>
@@ -24,40 +35,18 @@ body{background:#121212;color:white;font-family:Arial;margin:0;padding-bottom:12
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
+// IKA MA KEYS ANU APA OCHOKERA KU FIREBASE
 const firebaseConfig = {
-  // IKA MA KEYS ANU A FIREBASE APA
+  apiKey: "IKA_APA",
+  authDomain: "IKA_APA",
+  projectId: "IKA_APA",
+  storageBucket: "IKA_APA",
+  messagingSenderId: "IKA_APA",
+  appId: "IKA_APA"
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// FUNCTION YOTSITSA NYIMBO ZONSE
-async function loadSongs(){
-  const querySnapshot = await getDocs(collection(db, "songs"));
-  let html="";
-  querySnapshot.forEach((doc) => {
-    const s = doc.data();
-    html += `<div class="song">
-    <div onclick="playSong('${s.url}','${s.title}','${s.artist}')">
-      <b>${s.title}</b><br><small>${s.artist}</small>
-    </div>
-    <a href="${s.url}" download="${s.title}.mp3">
-      <button class="btn-download">DOWNLOAD</button>
-    </a>
-    </div>`;
-  });
-  document.getElementById("playlist").innerHTML = html || "Palibe nyimbo pano.";
-}
-
-// FUNCTION YOSEWERETSA
-window.playSong = function(url,title,artist){
-  document.getElementById("audioPlayer").src=url;
-  document.getElementById("nowPlaying").innerText="Kusewera: " + title + " - " + artist;
-  document.getElementById("audioPlayer").play();
-}
-
-loadSongs();
-</script>
-</body></html>
+const
