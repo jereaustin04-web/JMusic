@@ -37,7 +37,13 @@ input{width:90%;padding:10px;margin:8px 0;border-radius:5px;border:none;backgrou
 <script>
 const CLOUD_NAME = "159727339353381";
 const UPLOAD_PRESET = "music_app";
+const CLOUD_NAME = "159727339353381";
+const UPLOAD_PRESET = "music_app";
 
+// IKA KEYS ZA SUPABASE APA
+const SUPABASE_URL = "IKA URL YAKO YA SUPABASE APA";
+const SUPABASE_KEY = "IKA ANON KEY YAKO APA";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let songs = JSON.parse(localStorage.getItem('songs')) || [];
 
 window.uploadSong = async function(){
