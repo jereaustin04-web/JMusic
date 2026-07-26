@@ -4,101 +4,92 @@
 body{background:#121212;color:white;font-family:Arial;margin:0;padding-bottom:120px}
 .header{background:green;padding:20px;text-align:center;font-size:24px;font-weight:bold}
 .upload-box{background:#181818;margin:15px;padding:20px;border-radius:10px;border:2px dashed green}
-.upload-box h3{text-align:center;margin-top:0}
 input{width:90%;padding:10px;margin:8px 0;border-radius:5px;border:none;background:#282828;color:white}
 .btn-upload{background:green;color:white;padding:12px;width:95%;border:none;border-radius:8px;font-size:16px;cursor:pointer;font-weight:bold}
-.btn-upload:hover{background:#1DB954}
+.btn-upload:disabled{background:#555}
 .song{background:#181818;margin:10px 15px;padding:15px;border-radius:8px;display:flex;justify-content:space-between;align-items:center}
-.song:hover{background:#282828}
 .btn-download{background:green;color:white;padding:8px 12px;border:none;border-radius:6px;cursor:pointer;font-size:14px}
 .player{position:fixed;bottom:0;width:100%;background:#000;padding:15px;border-top:1px solid #282828}
 </style>
 </head><body>
-
 <div class="header">🎵 AUSTIN MUSIC</div>
-
 <div class="upload-box">
 <h3>⬆️ Kwezani Nyimbo Yanu</h3>
 <input type="file" id="fileInput" accept="audio/*">
 <input type="text" id="songTitle" placeholder="Lembani mutu wa nyimbo">
 <input type="text" id="songArtist" placeholder="Lembani dzina la woyimba">
-<button class="btn-upload" onclick="uploadSong()">UPLOAD NYIMBO</button>
+<button class="btn-upload" id="uploadBtn" onclick="uploadSong()">UPLOAD NYIMBO</button>
 <p id="status" style="text-align:center;color:yellow"></p>
 </div>
-
 <h3 style="padding-left:15px">Nyimbo Zonse:</h3>
 <div id="playlist">Zikutsegula...</div>
-
 <div class="player">
 <h4 id="nowPlaying" style="margin:5px 0">Sankhani nyimbo</h4>
 <audio id="audioPlayer" controls style="width:100%"></audio>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const CLOUD_NAME = "159727339353381";
-const UPLOAD_PRESET = "music_app";
+// ZAKO ZA CLOUDINARY
 const CLOUD_NAME = "159727339353381";
 const UPLOAD_PRESET = "music_app";
 
-// IKA KEYS ZA SUPABASE APA
-const SUPABASE_URL = "IKA URL YAKO YA SUPABASE APA";
-const SUPABASE_KEY = "IKA ANON KEY YAKO APA";
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let songs = JSON.parse(localStorage.getItem('songs')) || [];
+// IKA KEYS ZANU ZENIZENI APA
+const SUPABASE_URL = "https://zako.supabase.co";
+const SUPABASE_KEY = "eyJhbGcIUzI1NiIsInR5cCI6IkpXVCJ9...";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 window.uploadSong = async function(){
-  const file = document.getElementById("fileInput").files[0];
-  const title = document.getElementById("songTitle").value;
-  const artist = document.getElementById("songArtist").value;
-  const status = document.getElementById("status");
+    const file = document.getElementById("fileInput").files[0];
+    const title = document.getElementById("songTitle").value.trim();
+    const artist = document.getElementById("songArtist").value.trim();
+    const status = document.getElementById("status");
+    const uploadBtn = document.getElementById("uploadBtn");
 
-  if(!file ||!title ||!artist){ status.innerText = "Chonde lembani zonse!"; return; }
+    if(!file ||!title ||!artist){ status.innerText = "Chonde lembani zonse!"; return; }
 
-  status.innerText = "Kukweza ku Cloudinary... dikirani";
+    uploadBtn.disabled = true;
+    status.innerText = "⏳ Kukweza...";
 
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', UPLOAD_PRESET);
-  formData.append('resource_type', 'video');
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', UPLOAD_PRESET);
+    formData.append('resource_type', 'video');
 
-  try {
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, {
-      method: 'POST',
-      body: formData
-    });
-    const data = await res.json();
+    try {
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: 'POST', body: formData });
+        const data = await res.json();
+        if(!data.secure_url) throw new Error("Cloudinary inalephera");
 
-    songs.push({title:title, artist:artist, url:data.secure_url});
-    localStorage.setItem('songs', JSON.stringify(songs));
-
-    status.innerText = "Yakwezedwa! ✅";
-    loadSongs();
-  } catch(error){
-    status.innerText = "Vuto: " + error.message;
-  }
+        await supabaseClient.from('songs').insert([{title: title, artist: artist, url: data.secure_url}]);
+        status.innerText = "✅ Yakwezedwa!";
+        document.getElementById("fileInput").value = "";
+        document.getElementById("songTitle").value = "";
+        document.getElementById("songArtist").value = "";
+        loadSongs();
+    } catch(error){
+        status.innerText = "❌ Vuto: " + error.message;
+        console.log(error);
+    }
+    uploadBtn.disabled = false;
 }
 
-function loadSongs(){
-  let html="";
-  songs.forEach((s) => {
-    html += `<div class="song">
-    <div onclick="playSong('${s.url}','${s.title}','${s.artist}')">
-      <b>${s.title}</b><br><small>${s.artist}</small>
-    </div>
-    <a href="${s.url}" download="${s.title}.mp3">
-      <button class="btn-download">DOWNLOAD</button>
-    </a>
-    </div>`;
-  });
-  document.getElementById("playlist").innerHTML = html || "Palibe nyimbo. Kwezani yoyamba!";
+async function loadSongs(){
+    const { data, error } = await supabaseClient.from('songs').select('*').order('created_at', {ascending: false});
+    if(error){ document.getElementById("playlist").innerHTML = "Vuto potsegula"; return; }
+    let html="";
+    if(data.length === 0){ html = "<p style='padding:15px'>Palibe nyimbo. Kwezani yoyamba!</p>"; }
+    data.forEach((s) => {
+        html += `<div class="song"><div onclick="playSong('${s.url}','${s.title}','${s.artist}')"><b>${s.title}</b><br><small>${s.artist}</small></div><a href="${s.url}" download><button class="btn-download">DOWNLOAD</button></a></div>`;
+    });
+    document.getElementById("playlist").innerHTML = html;
 }
 
 function playSong(url,title,artist){
-  document.getElementById("audioPlayer").src=url;
-  document.getElementById("nowPlaying").innerText="Kusewera: " + title + " - " + artist;
-  document.getElementById("audioPlayer").play();
+    document.getElementById("audioPlayer").src=url;
+    document.getElementById("nowPlaying").innerText="🎶 Kusewera: " + title + " - " + artist;
+    document.getElementById("audioPlayer").play();
 }
-
 loadSongs();
 </script>
 </body></html>
