@@ -1,124 +1,96 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Austin Music Community</title>
+<head><meta charset="UTF-8"><title>Austin Music</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#121212;color:white;font-family:Arial;padding:15px}
-.header{text-align:center;margin-bottom:20px}
-.header h1{color:green;font-size:24px}
-.box{background:#181818;padding:15px;border-radius:12px;margin-bottom:15px;border:1px solid #333}
-.btn{background:green;color:white;padding:16px;width:100%;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:8px}
-.btn:hover{background:#00ff00;color:#000}
-#searchBox{width:100%;padding:12px;background:#282828;color:white;border:1px solid green;border-radius:8px;font-size:16px;margin-bottom:10px}
-.song{background:#282828;padding:12px;margin:8px 0;border-radius:10px}
-.song-info h4{color:lightgreen;font-size:15px}
-.song-info p{font-size:12px;color:gray;margin-bottom:5px}
-audio{width:100%;margin-top:5px;height:35px}
-input[type="file"]{display:none}
-input[type="text"]{width:100%;padding:10px;background:#282828;color:white;border:1px solid #444;border-radius:8px;margin-bottom:8px}
+body{background:#000;color:#fff;font-family:sans-serif;padding:10px}
+.header{background:#1DB954;padding:20px;text-align:center;border-radius:10px}
+.box{background:#111;padding:15px;margin:10px 0;border-radius:8px}
+input,button{width:100%;padding:12px;margin:5px 0;border:none;border-radius:5px}
+button{background:#1DB954;color:#fff;font-weight:bold;cursor:pointer}
+audio{width:100%;margin:5px 0}
+.song{background:#222;padding:10px;margin:8px 0;border-radius:8px}
+.link{font-size:11px;color:#1DB954;word-break:break-all}
+.comment-box{background:#333;padding:8px;margin:5px 0;border-radius:5px;font-size:13px}
+.comment-input{display:flex}
+.comment-input input{flex:1}
+.comment-input button{width:90px}
 </style>
 </head>
 <body>
+<div class="header"><h1>🎵 AUSTIN MUSIC</h1></div>
 
-<div class="header">
-<h1>🎵 AUSTIN MUSIC COMMUNITY</h1>
-<p>Upload and listen to music from everyone</p>
+<div class="box">
+<h3>ADMIN</h3>
+<input id="p" type="password" placeholder="Lowetsani Password">
+<button onclick="login()">LOWA</button>
+<p id="m" style="color:#1DB954"></p>
 </div>
 
 <div class="box">
-<h3>📤 UPLOAD YOUR SONG</h3>
-<input type="text" id="uploaderName" placeholder="Your name">
-<label for="fileInput" class="btn">CHOOSE SONG TO UPLOAD</label>
-<input type="file" id="fileInput" accept="audio/*">
-<p id="uploadStatus" style="color:gray;text-align:center;margin-top:10px"></p>
+<h3>UPLOAD</h3>
+<input id="n" placeholder="Dzina Lako">
+<input id="t" placeholder="Dzina la Nyimbo">
+<input id="f" type="file" accept="audio/*">
+<button onclick="uploadSong()">POST</button>
+<p id="s" style="color:orange"></p>
 </div>
 
 <div class="box">
-<h3>📻 COMMUNITY PLAYLIST</h3>
-<input type="text" id="searchBox" placeholder="Search songs..." onkeyup="searchSongs()">
-<div id="playlist"><p style="color:gray;text-align:center">Loading songs...</p></div>
+<h3>PLAYLIST</h3>
+<div id="l">Loading...</div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script>
-// FIREBASE CONFIG YAKO
-const firebaseConfig = {
-  apiKey: "AIzaSyCGi6GlZJXxWInCJ_XTTvCxnkYSW3K6_og",
-  databaseURL: "https://my-music-433b4-default-rtdb.firebaseio.com",
-  projectId: "my-music-433b4"
-};
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp({apiKey:"AIzaSyCGi6GlZJXxWInCJ_XTTvCxnkYSW3K6_og",databaseURL:"https://my-music-433b4-default-rtdb.firebaseio.com"});
+var db=firebase.database(),admin=false;
+var ADMIN_PASS = "Austin2026";
 
-const db = firebase.database();
-
-// UPLOAD KU CLOUDINARY
-document.getElementById("fileInput").onchange = async (e) => {
-    const file = e.target.files[0];
-    const name = document.getElementById("uploaderName").value;
-
-    if(!name){ alert("Please enter your name first"); return; }
-    if(!file){ return; }
-
-    document.getElementById("uploadStatus").innerText = "UPLOADING... Please wait";
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'music_app');
-    formData.append('folder', 'community_music');
-
-    const res = await fetch('https://api.cloudinary.com/v1_1/o1pg5jvm/auto/upload', {
-        method: 'POST',
-        body: formData
-    });
-    const data = await res.json();
-
-    const newSong = {
-        name: file.name.replace(/\.[^/.]+$/, ""),
-        url: data.secure_url,
-        user: name,
-        date: new Date().toLocaleDateString()
-    };
-    db.ref("songs").push(newSong);
-
-    alert("✅ Uploaded: " + newSong.name);
-    document.getElementById("uploadStatus").innerText = "Upload complete!";
-    document.getElementById("fileInput").value = "";
+function login(){
+  if(document.getElementById("p").value==ADMIN_PASS){
+    admin=true; document.getElementById("m").innerText="Walowa Admin"; load();
+  }else{alert("Password yolakwika")}
 }
 
-// WERENGANI NYIMBO ZONSE
-function loadSongs(){
-    db.ref("songs").on("value", snapshot => {
-        const playlist = document.getElementById("playlist");
-        playlist.innerHTML = "";
-        if(!snapshot.exists()){
-            playlist.innerHTML = "<p style='color:gray;text-align:center'>No songs yet. Be the first!</p>";
-            return;
-        }
-        snapshot.forEach(child => {
-            const song = child.val();
-            playlist.innerHTML = `
-            <div class="song" data-name="${song.name.toLowerCase()}">
-                <div class="song-info">
-                    <h4>${song.name}</h4>
-                    <p>By: ${song.user} | ${song.date}</p>
-                    <audio controls src="${song.url}"></audio>
-                </div>
-            </div>` + playlist.innerHTML;
-        });
-    });
+function uploadSong(){
+  var file=document.getElementById("f").files[0],n=document.getElementById("n").value,t=document.getElementById("t").value;
+  if(!n||!t||!file){alert("Lembani zonse");return}
+  document.getElementById("s").innerText="Ikukweza...";
+  var fd=new FormData();fd.append("file",file);fd.append("upload_preset","music_app");fd.append("resource_type","auto");
+  fetch("https://api.cloudinary.com/v1_1/o1pg5jvm/auto/upload",{method:"POST",body:fd})
+.then(res=>res.json()).then(data=>{
+    db.ref("songs").push({name:t,url:data.secure_url,user:n,likes:0,comments:{}});
+    alert("Yatha: "+t); document.getElementById("s").innerText="Watha!";
+    document.getElementById("n").value=""; document.getElementById("t").value=""; document.getElementById("f").value="";
+  }).catch(err=>alert("VUTO LA CLOUDINARY: "+err));
 }
-loadSongs();
 
-function searchSongs(){
-    let input = document.getElementById('searchBox').value.toLowerCase();
-    document.querySelectorAll('.song').forEach(song => {
-        song.style.display = song.dataset.name.includes(input)? "block" : "none";
-    });
+function delSong(k){if(confirm("Chotsa?"))db.ref("songs/"+k).remove()}
+function likeSong(k){db.ref("songs/"+k+"/likes").transaction(function(c){return (c||0)+1})}
+function copyLink(url){navigator.clipboard.writeText(url);alert("Link yakopedwa!")}
+function addComment(k){
+  var txt = document.getElementById("com_"+k).value;
+  var user = document.getElementById("n").value || "Guest";
+  if(!txt){alert("Lembani comment");return}
+  db.ref("songs/"+k+"/comments").push({user:user,text:txt});
+  document.getElementById("com_"+k).value="";
 }
+
+function load(){
+  db.ref("songs").on("value",function(snap){
+    var h=""; snap.forEach(function(c){
+      var x=c.val();
+      var shortUrl = x.url.substring(0,50)+"...";
+      var b = admin? '<button onclick="delSong(\''+c.key+'\')" style="background:red">Delete</button>' : '';
+      var comments = "";
+      if(x.comments){ for(var key in x.comments){ comments += '<div class="comment-box"><b>'+x.comments[key].user+':</b> '+x.comments[key].text+'</div>'; }}
+      h = '<div class="song"><h4>'+x.name+'</h4><p style="color:#aaa">By:'+x.user+'</p><audio controls src="'+x.url+'"></audio><div class="link">🔗 '+shortUrl+'</div><button onclick="copyLink(\''+x.url+'\')" style="background:orange;color:#000">📋 Koperani Link</button><button onclick="likeSong(\''+c.key+'\')">❤️ '+(x.likes||0)+'</button><div><h5>Comments</h5>'+comments+'<div class="comment-input"><input id="com_'+c.key+'" placeholder="Lembani comments Apa"><button onclick="addComment(\''+c.key+'\')">Tumiza</button></div></div>'+b+'</div>' + h;
+    });
+    document.getElementById("l").innerHTML=h||"Palibe nyimbo";
+  });
+}
+load()
 </script>
 </body>
 </html>
