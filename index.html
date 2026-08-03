@@ -1,60 +1,62 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>JMusic - Austin</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Austin Music - Nyimbo Zaulere Ku Malawi 2026</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-* {margin:0;padding:0;box-sizing:border-box}
-body{background:linear-gradient(180deg,#0a0a0a 0%,#121212 100%);color:#fff;font-family:'Poppins',sans-serif;min-height:100vh}
-.header{background:linear-gradient(90deg,#1DB954 0%,#1ed760 100%);padding:25px 15px;text-align:center;box-shadow:0 4px 20px rgba(29,185,84,0.3);position:sticky;top:0;z-index:10}
-.header h1{font-size:28px;font-weight:700;letter-spacing:1px}
-.container{max-width:600px;margin:0 auto;padding:15px}
-.box{background:#181818;padding:20px;margin:15px 0;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.5)}
-.box h3{color:#1DB954;margin-bottom:15px;font-size:18px}
-input{width:100%;padding:14px;margin:8px 0;border:none;border-radius:8px;background:#282828;color:#fff;font-size:14px}
-input:focus{outline:2px solid #1DB954;background:#333}
-button{width:100%;padding:14px;margin:8px 0;border:none;border-radius:8px;background:linear-gradient(90deg,#1DB954 0%,#1ed760 100%);color:#000;font-weight:700;font-size:15px;cursor:pointer;transition:0.3s}
-button:hover{transform:scale(1.02);box-shadow:0 4px 15px rgba(29,185,84,0.4)}
-.search-box{position:relative;margin-bottom:15px}
-.search-box input{padding-left:45px}
-.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:18px;color:#aaa}
-.song{display:flex;gap:12px;background:#282828;padding:12px;margin:12px 0;border-radius:12px;transition:0.3s;border-left:3px solid #1DB954}
-.song:hover{background:#333;transform:translateX(5px)}
-.cover{width:80px;height:80px;border-radius:8px;background:#333;object-fit:cover;flex-shrink:0}
-.song-content{flex:1}
-.song h4{font-size:15px;margin-bottom:3px;color:#fff}
-.song-info{color:#b3b3b3;font-size:11px;margin-bottom:8px}
-.audio-btns{display:flex;gap:6px;margin:8px 0}
-.audio-btns button{flex:1;font-size:11px;padding:8px;border-radius:6px}
-.btn-download{background:orange;color:#000}
-.btn-like{background:#ff0066;color:#fff}
-.btn-share{background:#1e90ff;color:#fff}
-.btn-link{background:#9b59b6;color:#fff}
-audio{width:100%;margin:8px 0;border-radius:8px;height:35px}
-.comment-box{background:#333;padding:8px;margin:5px 0;border-radius:6px;font-size:12px;border-left:2px solid #1DB954}
-.comment-input{display:flex;gap:5px}
-.comment-input input{flex:1;padding:10px}
-.comment-input button{width:80px;padding:10px}
-.date{font-size:10px;color:#1DB954}
-.footer{margin-top:30px;padding:20px;text-align:center;color:#666;font-size:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Poppins',sans-serif}
+.header{background:linear-gradient(90deg,#1DB954 0%,#1ed760 100%);padding:10px 15px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
+.logo{width:40px;height:40px;border-radius:50%;border:2px solid #fff;object-fit:cover}
+.main-container{display:flex;max-width:1200px;margin:0 auto;gap:15px;padding:15px}
+.sidebar-left{width:250px;position:sticky;top:70px;height:fit-content}
+.menu-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;margin:5px 0;cursor:pointer;background:#181818}
+.menu-item.active{background:#1DB954;color:#000;font-weight:700}
+.content{flex:1;max-width:600px}
+.box{background:#181818;padding:15px;margin:12px 0;border-radius:12px}
+.box h3{color:#1DB954;margin-bottom:12px}
+input,textarea{width:100%;padding:12px;margin:6px 0;border:none;border-radius:8px;background:#282828;color:#fff;font-family:'Poppins'}
+textarea{resize:none;height:80px}
+button{width:100%;padding:12px;margin:6px 0;border:none;border-radius:8px;background:linear-gradient(90deg,#1DB954 0%,#1ed760 100%);color:#000;font-weight:700;cursor:pointer}
+.song{display:flex;gap:10px;background:#282828;padding:10px;margin:10px 0;border-radius:10px}
+.cover{width:70px;height:70px;border-radius:8px;object-fit:cover}
+.audio-btns{display:flex;gap:5px;margin:6px 0}
+.audio-btns button{flex:1;font-size:11px;padding:8px}
+.btn-download{background:orange!important}
+.btn-like{background:#ff0066!important}
+.btn-link{background:#0088ff!important}
+.btn-share{background:#25D366!important}
+.desc{color:#aaa;font-size:12px;margin:4px 0;line-height:1.4}
+@media(max-width:900px){.sidebar-left{display:none}.main-container{padding:10px} }
 </style>
 </head>
 <body>
-<div class="header"><h1>🎵 JMusic</h1></div>
+<div class="header">
+<img src="https://i.imgur.com/2106523956891220.jpg" class="logo" alt="Logo">
+<h1>🎵 Austin Music</h1>
+</div>
 
-<div class="container">
+<div class="main-container">
+<div class="sidebar-left">
+<div class="menu-item active" onclick="showTab('home')">🏠 Home</div>
+<div class="menu-item" onclick="showTab('music')">🎵 Music</div>
+</div>
+
+<div class="content">
+<div id="home-tab" class="tab">
 <div class="box">
-<h3>👑 ADMIN</h3>
-<input id="p" type="password" placeholder="Lowetsani Password">
-<button onclick="login()">LOWA</button>
-<p id="m" style="color:#1DB954;text-align:center"></p>
+<h3>🎉 Welcome ku Austin Music</h3>
+<p style="color:#aaa;font-size:14px">Tsitsani nyimbo zatsopano zaku Malawi zaulere.</p>
 </div>
 
 <div class="box">
 <h3>⬆️ UPLOAD NYIMBO</h3>
 <input id="n" placeholder="Dzina Lako">
 <input id="t" placeholder="Dzina la Nyimbo">
-<input id="cover" type="file" accept="image/*" placeholder="Sankhani Cover">
+<!-- DESCRIPTION YATSOPANO -->
+<textarea id="d" placeholder="Lembani Description ya nyimbo... Mwachitsanzo: Nyimbo yachikondi yatsopano"></textarea>
 <input id="f" type="file" accept="audio/*">
 <button onclick="uploadSong()">POST NYIMBO</button>
 <p id="s" style="color:orange;text-align:center"></p>
@@ -62,15 +64,14 @@ audio{width:100%;margin:8px 0;border-radius:8px;height:35px}
 
 <div class="box">
 <h3>🎧 PLAYLIST</h3>
-<div class="search-box">
-<span class="search-icon">🔍</span>
-<input id="search" placeholder="Fufuzani nyimbo kapena ojambula..." onkeyup="searchSongs()">
-</div>
+<input id="search" placeholder="Fufuzani nyimbo..." onkeyup="searchSongs()">
 <div id="l">Loading...</div>
 </div>
+</div>
 
-<div class="footer">
-JMusic by Austin © 2026
+<div id="music-tab" class="tab" style="display:none">
+<div class="box"><h3>🎵 Nyimbo Zonse</h3><div id="l2">Loading...</div></div>
+</div>
 </div>
 </div>
 
@@ -78,100 +79,66 @@ JMusic by Austin © 2026
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script>
 firebase.initializeApp({apiKey:"AIzaSyCGi6GlZJXxWInCJ_XTTvCxnkYSW3K6_og",databaseURL:"https://my-music-433b4-default-rtdb.firebaseio.com"});
-var db=firebase.database(),admin=false;
-var ADMIN_PASS = "Austin2026";
+var db=firebase.database();
 var allSongs = [];
 
-function login(){
-if(document.getElementById("p").value==ADMIN_PASS){
-admin=true;document.getElementById("m").innerText="Walowa Admin ✅";load();
-}else{alert("Password yolakwika")}
+function showTab(tab){
+document.querySelectorAll('.tab').forEach(t=>t.style.display='none');
+document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+event.target.classList.add('active');
+document.getElementById(tab+'-tab').style.display='block';
+if(tab=='music'){displaySongs(allSongs,'l2')}else{displaySongs(allSongs,'l')}
 }
 
 function uploadSong(){
 var file=document.getElementById("f").files[0];
-var coverFile=document.getElementById("cover").files[0];
 var n=document.getElementById("n").value;
 var t=document.getElementById("t").value;
-if(!n||!t||!file){alert("Lembani Dzina, Title ndi Nyimbo");return}
+var d=document.getElementById("d").value; // TENGANI DESCRIPTION
+if(!n||!t||!d||!file){alert("Lembani Zonse: Dzina, Title, Description ndi Nyimbo");return}
 document.getElementById("s").innerText="Ikukweza...⏳";
 
+var defaultCover = "https://i.imgur.com/2106523956891220.jpg";
+
 var fd=new FormData();
-fd.append("file",file);fd.append("upload_preset","music_app");fd.append("resource_type","auto");
+fd.append("file",file);
+fd.append("upload_preset","music_app");
+fd.append("resource_type","auto");
+
 fetch("https://api.cloudinary.com/v1_1/o1pg5jvm/auto/upload",{method:"POST",body:fd})
 .then(res=>res.json()).then(data=>{
-var songUrl = data.secure_url;
-var today = new Date().toLocaleDateString("en-GB");
-
-if(coverFile){
-var fd2 = new FormData();
-fd2.append("file",coverFile);fd2.append("upload_preset","music_app");fd2.append("resource_type","image");
-fetch("https://api.cloudinary.com/v1_1/o1pg5jvm/image/upload",{method:"POST",body:fd2})
-.then(res=>res.json()).then(coverData=>{
-saveSong(t,songUrl,n,coverData.secure_url,today);
-}).catch(()=>saveSong(t,songUrl,n,"",today));
-}else{
-saveSong(t,songUrl,n,"",today);
-}
+saveSong(t,data.secure_url,n,d,defaultCover,new Date().toLocaleDateString("en-GB"));
 }).catch(err=>alert("VUTO: "+err));
 }
 
-function saveSong(name,url,user,cover,date){
-db.ref("songs").push({name:name,url:url,user:user,cover:cover,likes:0,comments:{},date:date});
+function saveSong(name,url,user,desc,cover,date){
+db.ref("songs").push({name:name,url:url,user:user,desc:desc,cover:cover,likes:0,date:date});
 alert("Yatha: "+name);document.getElementById("s").innerText="Watha! ✅";
-document.getElementById("n").value="";document.getElementById("t").value="";document.getElementById("f").value="";document.getElementById("cover").value="";
+document.getElementById("n").value="";document.getElementById("t").value="";document.getElementById("d").value="";document.getElementById("f").value="";
 }
 
-function delSong(k){if(confirm("Mukutsimikiza kuchotsa?"))db.ref("songs/"+k).remove()}
 function likeSong(k){db.ref("songs/"+k+"/likes").transaction(function(c){return (c||0)+1})}
+function downloadSong(url, name){var a = document.createElement('a');a.href = url;a.download = name + ".mp3";a.click();alert("Ikutsitsa: " + name);}
+function copySongLink(url){navigator.clipboard.writeText(url);alert("Link ya nyimbo yakopedwa! 📋")}
+function copyWebsiteLink(){navigator.clipboard.writeText("https://jereaustin04-web.github.io/JMusic/");alert("Link ya AustinMusic.com yakopedwa! 📤")}
+function searchSongs(){var term = document.getElementById("search").value.toLowerCase();var filtered = allSongs.filter(s => s.name.toLowerCase().includes(term) || s.desc.toLowerCase().includes(term));displaySongs(filtered,'l');}
 
-// KOPERANI LINK YA NYIMBO IMENEYO YOKHA
-function copySongLink(url){
-navigator.clipboard.writeText(url);
-alert("Link ya nyimbo yakopedwa! 📋");
-}
-
-// KOPERANI LINK YA WEBSITE
-function copyWebsiteLink(){
-navigator.clipboard.writeText("https://jereaustin04-web.github.io/JMusic/");
-alert("Link ya website yakopedwa! 📋");
-}
-
-function downloadSong(url, name){
-var a = document.createElement('a');a.href = url;a.download = name + ".mp3";a.target = "_blank";
-document.body.appendChild(a);a.click();document.body.removeChild(a);alert("Ikutsitsa: " + name);
-}
-
-function addComment(k){
-var txt = document.getElementById("com_"+k).value;var user = document.getElementById("n").value || "Guest";
-if(!txt){alert("Lembani comment");return}
-db.ref("songs/"+k+"/comments").push({user:user,text:txt});document.getElementById("com_"+k).value="";
-}
-
-function searchSongs(){
-var term = document.getElementById("search").value.toLowerCase();
-var filtered = allSongs.filter(s => s.name.toLowerCase().includes(term) || s.user.toLowerCase().includes(term));
-displaySongs(filtered);
-}
-
-function displaySongs(songs){
-var h="";songs.forEach(function(x){
-var coverImg = x.cover || "https://via.placeholder.com/80/1DB954/000000?text=♪";
-var b = admin? '<button onclick="delSong(\''+x.key+'\')" style="background:red;color:#fff;font-size:11px;padding:6px">🗑️ Delete</button>' : '';
-var comments = "";if(x.comments){for(var key in x.comments){comments += '<div class="comment-box"><b>'+x.comments[key].user+':</b> '+x.comments[key].text+'</div>';}}
-
-h = '<div class="song"><img class="cover" src="'+coverImg+'"><div class="song-content"><h4>'+x.name+'</h4><div class="song-info">👤 '+x.user+' • 📅 '+ (x.date || "Unknown") +'</div><audio controls src="'+x.url+'"></audio><div class="audio-btns"><button class="btn-download" onclick="downloadSong(\''+x.url+'\',\''+x.name+'\')">⬇️ DL</button><button class="btn-like" onclick="likeSong(\''+x.key+'\')">❤️ '+(x.likes||0)+'</button><button class="btn-link" onclick="copySongLink(\''+x.url+'\')">🔗 Link</button><button class="btn-share" onclick="copyWebsiteLink()">📤 Share</button></div><div><h5 style="color:#1DB954;margin:8px 0;font-size:12px">💬 Comments</h5>'+comments+'<div class="comment-input"><input id="com_'+x.key+'" placeholder="Comment..."><button onclick="addComment(\''+x.key+'\')">Tumiza</button></div></div>'+b+'</div></div>' + h;
+function displaySongs(songs,targetId){
+var h="";
+songs.forEach(function(x){
+var coverImg = x.cover || "https://via.placeholder.com/70/1DB954/000?text=♪";
+h = '<div class="song"><img class="cover" src="'+coverImg+'"><div style="flex:1"><h4>'+x.name+'</h4><div style="color:#b3b3b3;font-size:10px">👤 '+x.user+' • 📅 '+ (x.date || "") +'</div><p class="desc">'+(x.desc || "")+'</p><audio controls src="'+x.url+'"></audio><div class="audio-btns"><button class="btn-download" onclick="downloadSong(\''+x.url+'\',\''+x.name+'\')">⬇️ DL</button><button class="btn-like" onclick="likeSong(\''+x.key+'\')">❤️ '+(x.likes||0)+'</button><button class="btn-link" onclick="copySongLink(\''+x.url+'\')">🔗 Link</button><button class="btn-share" onclick="copyWebsiteLink()">📤 Share</button></div></div></div>' + h;
 });
-document.getElementById("l").innerHTML=h||"<p style='text-align:center;color:#666'>Palibe nyimbo pano</p>";
+document.getElementById(targetId).innerHTML=h||"<p>Palibe nyimbo pano</p>";
 }
 
 function load(){
 db.ref("songs").on("value",function(snap){
 allSongs = [];snap.forEach(function(c){var x=c.val();x.key = c.key;allSongs.push(x);});
-allSongs.reverse();displaySongs(allSongs);
+allSongs.reverse();displaySongs(allSongs,'l');
 });
 }
 load()
 </script>
 </body>
-  </html>
+</html>
